@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Approaching Tidymodels </title>
+    <meta charset="utf-8" />
+    <meta name="author" content="twitter:@rinpharma github:philbowsher" />
+    <script src="Approaching_Tidymodels_in_Pharma_files/header-attrs-2.10/header-attrs.js"></script>
+    <link rel="stylesheet" href="include/rstudio.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <span style="color:#c6316b"><strong>Approaching <span style="color:#c6316b">Tidymodels </strong></span>
+## <span style="color:#c6316b"><strong>in Pharma</strong></span>
+### <span style="color:#black"><strong>twitter:<span class="citation">@rinpharma</span> github:philbowsher</strong></span>
+
+---
+
+
+
+```r
+library(tidymodels)
+```
+
+```
+## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip
+```
+
+```
+## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.3 ──
+```
+
+```
+## ✓ broom        0.7.9      ✓ recipes      0.1.16
+## ✓ dials        0.0.9      ✓ rsample      0.1.0 
+## ✓ dplyr        1.0.7      ✓ tibble       3.1.4 
+## ✓ ggplot2      3.3.5      ✓ tidyr        1.2.0 
+## ✓ infer        1.0.0      ✓ tune         0.1.6 
+## ✓ modeldata    0.1.1      ✓ workflows    0.2.3 
+## ✓ parsnip      0.1.7      ✓ workflowsets 0.1.0 
+## ✓ purrr        0.3.4      ✓ yardstick    0.0.8
+```
+
+```
+## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x purrr::discard() masks scales::discard()
+## x dplyr::filter()  masks stats::filter()
+## x dplyr::lag()     masks stats::lag()
+## x recipes::step()  masks stats::step()
+## • Use tidymodels_prefer() to resolve common conflicts.
+```
+
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+```
+
+```
+## ✓ readr   2.0.1     ✓ forcats 0.5.1
+## ✓ stringr 1.4.0
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x readr::col_factor() masks scales::col_factor()
+## x purrr::discard()    masks scales::discard()
+## x dplyr::filter()     masks stats::filter()
+## x stringr::fixed()    masks recipes::fixed()
+## x dplyr::lag()        masks stats::lag()
+## x readr::spec()       masks yardstick::spec()
+```
+
+
+
+
+
+class: subtitle-slide, white, middle, center
+
+# Interest in machine learning (ML) in pharma has increased rapidly over the last 10 years. This talk is for those new to ML in pharma.  cost of pharmaceutical R&amp;D was doubling every decade A new drug typically takes more than a decade to develop, at a cost of almost $3 billion  drugmakers and investors are spending billions of dollars to turbocharge the search for new treatments using artificial intelligence
+---
+
+
+
+class: panel-narrow-slide, center
+# AI/ML/DL?
+
+&lt;img src="images/aiml.jpeg" width="700" height="500" /&gt;
+
+---
+
+
+
+
+class: subtitle-slide, white, middle, left
+
+# I covered python &amp; DL at Phuse 2020:
+
+- https://github.com/philbowsher/Workshop-R-Tensorflow-Scientific-Computing
+- https://colorado.rstudio.com/rsc/WorkshopRDeepLearningSci/workshopTensorflow.html#1
+---
+
+
+
+
+
+
+class: panel-narrow-slide, center
+# ML?
+
+&lt;img src="images/mlgroup.jpeg" width="700" height="500" /&gt;
+
+---
+
+
+class: panel-narrow-slide, left
+
+# FDA &amp; ML
+
+- **ML had a big focus at the 2021 FDA Science Forum**
+- [2021 FDA Science Forum](https://www.fda.gov/media/149502/download)
+- [AI/ML-Based Software as a Medical Device Action Plan](https://www.fda.gov/news-events/press-announcements/fda-releases-artificial-intelligencemachine-learning-action-plan)
+- [Pharmacometrics &amp; Neural Networks](https://www.fda.gov/drugs/regulatory-science-research-and-education/new-approach-pharmacometrics-recurrent-neural-networks-modeling-drug-exposure-and-drug-response)
+- (ML/DL) methods have been increasingly used across many stages of the drug development process
+- E.g. drug discovery, digital imaging, disease diagnostics, genetic testing, adverse event detection, trial recruitment, real-world data &amp; drug repurposing etc.
+---
+
+
+
+
+
+
+
+
+
+class: panel-narrow-slide, center
+# FDA ASA Talk
+
+&lt;img src="images/fdaasa.jpeg" width="400" height="400" /&gt;
+
+---
+
+
+
+
+
+
+
+
+
+class: panel-narrow-slide, left
+
+# Companies
+- [Recursion Pharmaceuticals](https://www.forbes.com/sites/calumchace/2022/02/25/first-wholly-ai-developed-drug-enters-phase-1-trials/?sh=35c6ef752680)
+- [Pfizer](https://www.fiercebiotech.com/medtech/pfizer-re-ups-cytoreason-collab-applying-ai-disease-models-to-drug-development)
+- [Novartis](https://www.sciencedirect.com/science/article/pii/S2666389921001550)
+---
+
+
+class: panel-narrow-slide, left
+
+# ML Pharma Companies with AI/ML/DL on site
+- [insilico](https://insilico.com/)
+- [recursion](https://www.recursion.com/)
+- [insitro](https://insitro.com/)
+- [atomwise](https://www.atomwise.com/)
+- [abcellera](https://www.abcellera.com/)
+- [deepcure](https://deepcure.ai/)
+- [benevolent](https://www.benevolent.com/)
+---
+
+
+
+
+class: panel-narrow-slide, left
+
+# Big Tech
+
+- [Google](https://cloud.google.com/solutions/healthcare-life-sciences/drug-development)
+- [Google Isomorphic Laboratories](https://www.isomorphiclabs.com/)
+- [Deepmind predicts protein structures using just the primary protein sequence](https://cloud.google.com/blog/products/ai-machine-learning/running-alphafold-on-vertexai)
+- [Nvidia](https://www.nvidia.com/en-us/industries/healthcare-life-sciences/drug-discovery/)
+- [Microsoft](https://news.microsoft.com/transform/novartis-empowers-scientists-ai-speed-discovery-development-breakthrough-medicines/)
+- [Facebook](https://ai.facebook.com/blog/ai-predicts-effective-drug-combinations-to-fight-complex-diseases-faster/)
+- [Amazon](https://aionlabs.com/)
+---
+
+
+
+class: subtitle-slide, white, middle, center
+
+# Goal:
+
+Build models that generate accurate predictions for future, 
+yet-to-be-seen data.
+
+*Max Kuhn (caret) &amp; Kjell Johnston, http://www.feat.engineering/
+---
+
+
+
+class: subtitle-slide, white, middle, center
+
+# The tidy modeling "verse" is a collection of packages for modeling &amp; statistical analysis that share the underlying design philosophy, grammar, and data structures of the tidyverse. The following is an intro to this space!
+
+https://r4ds.had.co.nz/explore-intro.html
+---
+
+
+
+
+class: panel-narrow-slide, left
+
+# CORE TIDYMODELS PACKAGES
+- tidymodels
+- rsample
+- parsnip
+- recipes
+- workflows
+- yardstick
+- tune
+- broom
+---
+
+
+
+class: panel-narrow-slide, left
+
+# Setup &amp; Use
+- Install many of the packages in the tidymodels ecosystem by running: install.packages("tidymodels")
+- Run library(tidymodels) to load the core packages and make them available in your current R session.
+- [Validation](https://www.rstudio.com/assets/img/validation-tidy.pdf)
+---
+
+
+
+class: panel-narrow-slide, middle, frame
+
+
+# .center[To specify a model with parsnip]
+
+.right-column[
+
+1\. Pick a .display[model] + .display[engine]
+
+2\. Set the .display[mode] (if needed)
+
+]
+---
+
+
+class: panel-narrow-slide, middle, frame
+
+# .center[To specify a model with parsnip]
+
+
+
+```r
+logistic_reg(engine = "glm") %&gt;%
+  set_mode("classification")
+```
+
+```
+## Logistic Regression Model Specification (classification)
+## 
+## Computational engine: glm
+```
+
+---
+
+class: panel-narrow-slide, middle, frame
+
+# .center[To specify a model with parsnip]
+
+
+
+
+```r
+decision_tree(engine = "C5.0") %&gt;%
+  set_mode("classification")
+```
+
+```
+## Decision Tree Model Specification (classification)
+## 
+## Computational engine: C5.0
+```
+
+
+
+
+---
+class: panel-narrow-slide, middle, frame
+
+# .center[To specify a model with parsnip]
+
+
+
+```r
+nearest_neighbor(engine = "kknn") %&gt;%              
+  set_mode("classification")        
+```
+
+```
+## K-Nearest Neighbor Model Specification (classification)
+## 
+## Computational engine: kknn
+```
+
+
+
+---
+
+
+
+class: subtitle-slide, white, middle, left
+
+# Demo
+
+- [A Gentle Intro to Tidymodels](https://gist.github.com/philbowsher/d8c84fb99ff408dde359e160ac3c8b26)
+- [Build a model](https://github.com/rstudio-education/tidymodels-virtually/blob/master/materials/rmed-solutions/01-model.Rmd)
+- [Advanced Example](https://github.com/jthomasmock/tidymodels-workshops/blob/master/scripts/fit-lr.R)
+- [RStudio Cloud workspace](https://bit.ly/tidymodels-it)
+- [RStudio Cloud Test Drive](https://rstudio.cloud/project/2674862)
+- [diabetes dataset](https://www.rebeccabarter.com/blog/2020-03-25_machine_learning/)
+---
+
+
+class: subtitle-slide, white, middle, center
+
+# The “pit of success”...is the philosophy that users shouldn’t have to strive and struggle to do the right thing. They should be able to fall into good habits almost by accident...The brilliant insight of the recipes packages is that each of those feature engineering steps is itself a model that needs to be trained!
+
+http://varianceexplained.org/r/sliced-ml/
+---
+
+
+
+
+class: subtitle-slide, white, middle, center
+
+# Deploying ML projects to production can be tricky. MLOps looks to establish best practices, processes, modern tooling, &amp; automated workflows to deploy &amp; maintain machine learning models in production, combining ML and the CI/CD DevOps.
+
+https://twitter.com/topepos/status/1480472986566238209
+https://www.mihaileric.com/posts/mlops-is-a-mess/
+
+---
+
+
+
+class: subtitle-slide, white, middle, center
+
+# The vetiver R package provides tooling to version, share, deploy, &amp; monitor a trained model! Vetiver, RMD, pins &amp; plumber make a powerful combo for deploying tidymodels workflows into production. The vetiver package can help you generate a Dockerfile to deploy your model as an API!
+
+https://github.com/tidymodels/vetiver-r
+
+---
+
+
+
+
+
+class: panel-narrow-slide, left
+
+# MLops in R via Vetiver
+- [Vetiver](https://vetiver.tidymodels.org/articles/vetiver.html)
+- [R Markdown](https://rmarkdown.rstudio.com/)
+- [plumber](https://www.rplumber.io/)
+- [shiny](https://shiny.rstudio.com/)
+- [Pins](https://kmasiello.github.io/pins-slc-rug/#1)
+---
+
+
+class: subtitle-slide, white, middle, center
+
+# Vetiver Demo
+
+https://github.com/juliasilge/vetiverdemo
+
+---
+
+
+
+class: panel-narrow-slide, left
+
+# Learn
+- [Cheat Sheet](https://cimentadaj.github.io/blog/2020-02-06-the-simplest-tidy-machine-learning-workflow/the-simplest-tidy-machine-learning-workflow/)
+- [Learn](https://www.tidymodels.org/learn/)
+- [ML Books](https://www.tidymodels.org/books/)
+- [Tidymodels Book](https://www.tmwr.org/)
+- [Talks &amp; Workshops](https://www.apreshill.com/talk/)
+- [Build a model](https://www.tidymodels.org/start/models/)
+- [RStudio Conf Modeling Talks](https://www.rstudio.com/categories/modeling/)
+---
+
+
+class: panel-narrow-slide, left
+
+# Talks by Max &amp; Julia
+- [Data visualization for real-world machine learning](https://rinpharma.com/publication/rinpharma_154/)
+- [an-introduction-to-tidymodels](https://github.com/topepo/an-introduction-to-tidymodels)&amp; [slides](https://f.hubspotusercontent00.net/hubfs/3463003/Max%20Kuhn.pdf)
+- [Building R Modeling Packages](https://canal.uned.es/video/5dd25b9f5578f275e407dd88)
+- [Survival analysis with tidymodels: The censored package](https://rinpharma.com/publication/rinpharma_220/)
+- [Stack'Em High! Ensembles Using tidymodels](https://www.youtube.com/watch?v=IwnhUyS0n_g)
+- [whats-new-in-tidymodels](https://www.rstudio.com/resources/rstudioglobal-2021/whats-new-in-tidymodels/)
+---
+
+
+class: panel-narrow-slide, left
+
+# Cool Stuff
+- [parsnip addin](https://parsnip.tidymodels.org/reference/parsnip_addin.html)
+- [Productionizing Shiny and Plumber with Pins](https://rviews.rstudio.com/2019/10/17/deploying-data-with-pins/)
+- [APIs &amp; Pins](https://www.rstudio.com/resources/rstudioconf-2020/deploying-end-to-end-data-science-with-shiny-plumber-and-pins/)
+- [Access to care example](https://solutions.rstudio.com/example/access_to_care/)
+- [Help Contribute](https://www.tidymodels.org/contribute/)
+---
+
+
+
+class: subtitle-slide, white, middle, center
+
+# rstudio conference &amp; rinpharma
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": true,
+"highlightLines": true,
+"highlightStyle": "github",
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
