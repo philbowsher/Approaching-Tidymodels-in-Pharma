@@ -49,8 +49,8 @@ class: subtitle-slide, white, middle, left
 
 # I covered python & DL at Phuse 2020:
 
-- https://github.com/philbowsher/Workshop-R-Tensorflow-Scientific-Computing
-- https://colorado.rstudio.com/rsc/WorkshopRDeepLearningSci/workshopTensorflow.html#1
+- [R Deep Learning Workshop](https://github.com/philbowsher/Workshop-R-Tensorflow-Scientific-Computing)
+- [R Deep Learning Slides](https://colorado.rstudio.com/rsc/WorkshopRDeepLearningSci/workshopTensorflow.html#1)
 ---
 
 
@@ -136,6 +136,7 @@ class: panel-narrow-slide, left
 - [Microsoft](https://news.microsoft.com/transform/novartis-empowers-scientists-ai-speed-discovery-development-breakthrough-medicines/)
 - [Facebook](https://ai.facebook.com/blog/ai-predicts-effective-drug-combinations-to-fight-complex-diseases-faster/)
 - [Amazon](https://aionlabs.com/)
+- [Predicting protein structures AWS](https://aws.amazon.com/blogs/industries/predicting-protein-structures-at-scale-using-aws-batch/)
 ---
 
 
@@ -165,14 +166,14 @@ https://r4ds.had.co.nz/explore-intro.html
 class: panel-narrow-slide, left
 
 # CORE TIDYMODELS PACKAGES
-- tidymodels
-- rsample
-- parsnip
-- recipes
-- workflows
-- yardstick
-- tune
-- broom
+- [tidymodels](https://tidymodels.tidymodels.org/)
+- [rsample](https://rsample.tidymodels.org/)
+- [parsnip](https://parsnip.tidymodels.org/)
+- [recipes](https://recipes.tidymodels.org/)
+- [workflows](https://workflows.tidymodels.org/)
+- [yardstick](https://yardstick.tidymodels.org/)
+- [tune](https://tune.tidymodels.org/)
+- [broom](https://broom.tidymodels.org/)
 ---
 
 
@@ -255,6 +256,7 @@ class: subtitle-slide, white, middle, left
 - [RStudio Cloud workspace](https://bit.ly/tidymodels-it)
 - [RStudio Cloud Test Drive](https://rstudio.cloud/project/2674862)
 - [diabetes dataset](https://www.rebeccabarter.com/blog/2020-03-25_machine_learning/)
+- [Heart disease dataset](https://rviews.rstudio.com/2022/04/19/mldatar-real-world-datasets-for-machine-learning-applications/)
 ---
 
 
@@ -299,6 +301,7 @@ class: panel-narrow-slide, left
 - [plumber](https://www.rplumber.io/)
 - [shiny](https://shiny.rstudio.com/)
 - [Pins](https://kmasiello.github.io/pins-slc-rug/#1)
+- [Model Monitoring with R Markdown, pins, and RStudio Connect](https://www.rstudio.com/blog/model-monitoring-with-r-markdown/)
 ---
 
 
