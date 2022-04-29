@@ -1,0 +1,73 @@
+---
+title: "tidymodel_demo"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(scipen = 999)
+library(tidyverse)
+library(modeldata)
+library(tidymodels)
+
+data("ad_data")
+alz <- ad_data
+print("Hello Phuse 2022!")
+```
+
+
+```{r}
+alz_split <- initial_split(alz, strata = Class, prop = .9)
+alz_train <- training(alz_split)
+alz_test <- testing(alz_split)
+
+ad_rec <- recipe(Class ~ tau + VEGF, data = alz_train)
+
+lr_mod <- 
+  logistic_reg() %>% 
+  set_engine(engine = "glm") %>% 
+  set_mode("classification")
+lr_mod
+```
+
+```{r}
+tree_mod <- 
+  decision_tree() %>% 
+  set_engine(engine = "C5.0") %>% 
+  set_mode("classification")
+tree_mod 
+```
+
+
+```{r}
+set.seed(100) # Important!
+
+alz_split  <- initial_split(alz, strata = Class, prop = .9)
+alz_train  <- training(alz_split)
+alz_test   <- testing(alz_split)
+
+tree_mod %>% 
+  fit(Class ~ tau + VEGF, 
+      data = alz_train) %>% 
+  predict(new_data = alz_test) %>% 
+  mutate(true_class = alz_test$Class) %>% 
+  accuracy(truth = true_class, 
+           estimate = .pred_class)
+```
+
+
+```{r}
+set.seed(100)
+alz_folds <- 
+    vfold_cv(alz_train, v = 10, strata = Class)
+alz_folds
+```
+
+
+
+```{r}
+set.seed(100)
+tree_mod %>% 
+  fit_resamples(Class ~ tau + VEGF, 
+                resamples = alz_folds) %>% 
+  collect_metrics()
+```
