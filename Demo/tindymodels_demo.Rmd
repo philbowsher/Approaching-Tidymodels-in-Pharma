@@ -3,6 +3,8 @@ title: "tidymodel_demo"
 output: html_document
 ---
 
+
+Get Data
 ```{r setup, include=FALSE}
 options(scipen = 999)
 library(tidyverse)
@@ -16,12 +18,27 @@ print("Hello Phuse 2022!")
 
 
 ```{r}
+
+# initial_split creates a single binary split of the data into a training set and testing set.
+# conduct stratified sampling
+# proportion of data to be retained for modeling/analysis
 alz_split <- initial_split(alz, strata = Class, prop = .9)
+
 alz_train <- training(alz_split)
+
 alz_test <- testing(alz_split)
 
+c(max(alz_train$VEGF), min(alz_test$VEGF)) 
+
+
+#Recipe -  a recipe for a simple logistic regression model
+# variable on the left-hand side of the tilde (~) is considered the model outcome
+#  right-hand side of the tilde are the predictors
 ad_rec <- recipe(Class ~ tau + VEGF, data = alz_train)
 
+# parsnip package
+# logistic regression to model the alz data
+# Computational engine: glm
 lr_mod <- 
   logistic_reg() %>% 
   set_engine(engine = "glm") %>% 
@@ -30,21 +47,69 @@ lr_mod
 ```
 
 ```{r}
+# This time, change it for decision_tree
+# parsnip package
 tree_mod <- 
   decision_tree() %>% 
   set_engine(engine = "C5.0") %>% 
   set_mode("classification")
 tree_mod 
 ```
+```{r}
+# workflows - workflow is an object that can bundle together your pre-processing, modeling, and post-processing requests, recipe and parsnip model, these can be combined into a workflow
+
+lr_wflow <- workflow() %>% 
+  add_recipe(ad_rec) %>% 
+  add_model(lr_mod)
+
+tree_wflow <- workflow() %>% 
+  add_recipe(ad_rec) %>% 
+  add_model(tree_mod)
+```
 
 
 ```{r}
+# fit() parsnip
+# Apply a model to create different types of predictions. predict()
+# Accuracy is the proportion of the data that are predicted correctly - yardstick
+
+lr_pred <- lr_wflow %>% 
+  fit(data = alz_train) %>% 
+  predict(new_data = alz_test) %>% 
+  mutate(true_class = alz_test$Class) %>% 
+  accuracy(truth = true_class, 
+           estimate = .pred_class)
+
+tree_pred <- tree_wflow %>% 
+  fit(data = alz_train) %>% 
+  predict(new_data = alz_test) %>% 
+  mutate(true_class = alz_test$Class) %>% 
+  accuracy(truth = true_class, 
+           estimate = .pred_class)
+```
+
+```{r}
+lr_pred
+tree_pred
+```
+
+
+
+```{r}
+# Since random sampling uses random numbers, it is important to set the random number seed.
 set.seed(100) # Important!
 
+# initial_split creates a single binary split of the data into a training set and testing set.
+# conduct stratified sampling
+# proportion of data to be retained for modeling/analysis
 alz_split  <- initial_split(alz, strata = Class, prop = .9)
 alz_train  <- training(alz_split)
 alz_test   <- testing(alz_split)
 
+# parsnip fit() takes a model specification, translate the required code by substituting arguments, and execute the model fit routine
+# Apply a model to create different types of predictions. predict()
+# mutae from dplyr
+# Accuracy is the proportion of the data that are predicted correctly. yardstick
 tree_mod %>% 
   fit(Class ~ tau + VEGF, 
       data = alz_train) %>% 
@@ -56,16 +121,23 @@ tree_mod %>%
 
 
 ```{r}
+# Since random sampling uses random numbers, it is important to set the random number seed.
 set.seed(100)
+
+# V-fold cross-validation (also known as k-fold cross-validation) randomly splits the data into V groups of roughly equal size (called "folds") - rsample
 alz_folds <- 
     vfold_cv(alz_train, v = 10, strata = Class)
+
 alz_folds
 ```
 
 
 
 ```{r}
+# Since random sampling uses random numbers, it is important to set the random number seed.
 set.seed(100)
+
+# fit_resamples() computes a set of performance metrics across one or more resamples. used for fitting a single model+recipe or model+formula combination across many resamples - tune
 tree_mod %>% 
   fit_resamples(Class ~ tau + VEGF, 
                 resamples = alz_folds) %>% 
