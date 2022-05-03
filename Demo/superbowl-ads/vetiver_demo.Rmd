@@ -1,0 +1,154 @@
+---
+title: "MLOps with vetiver"
+author: "Julia Silge"
+date: 2020-04-19
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The MLOps cycle
+
+![MLOps cycle](Vetiver_cycle_slide3.png)
+
+*from Wikipedia: <https://en.wikipedia.org/wiki/ModelOps>*
+
+Data scientists have effective tools that they ❤️ to:
+
+-   collect data
+
+-   prepare, manipulate, refine data
+
+-   train models
+
+There is a lack 😩 of effective tools (especially open source) to:
+
+-   put models into production
+
+-   monitor model performance
+
+-   trigger retraining
+
+## What is vetiver? <https://vetiver.tidymodels.org/>
+
+> *Vetiver, the oil of tranquility, is used as a stabilizing ingredient in perfumery to preserve more volatile fragrances.*
+
+The **goal** of vetiver is to provide fluent tooling to **version, share, deploy, and monitor** a trained model.
+
+## Build a model
+
+```{r}
+library(tidyverse)
+superbowl_ads_raw <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-03-02/youtube.csv')
+
+superbowl_ads_raw %>%
+    select(brand, funny:animals, like_count)
+
+superbowl_ads <-
+    superbowl_ads_raw %>%
+    select(funny:animals, like_count) %>%
+    na.omit()
+
+```
+
+```{r}
+library(tidymodels)
+
+rf_spec <- rand_forest(mode = "regression")
+rf_form <- like_count ~ .
+
+rf_fit <-
+    workflow(rf_form, rf_spec) %>%
+    fit(superbowl_ads)
+```
+
+Data scientists use tools they love for these steps, like the tidyverse, pandas, tidymodels, scikit-learn, etc.
+
+## Deploy a model
+
+Create a deployable model object:
+
+```{r}
+library(vetiver)
+v <- vetiver_model(rf_fit, "superbowl_rf")
+v
+```
+
+Version and share the model:
+
+```{r}
+library(pins)
+
+
+model_board <- board_rsconnect(
+    auth = "envvar",
+    server = Sys.getenv("CONNECT_SERVER"), # Sys.getenv("CONNECT_SERVER")
+    account = "gt",
+    key = Sys.getenv("VETIVER_API"))
+
+model_board %>% vetiver_pin_write(v)
+
+
+
+```
+
+Document model: <https://vetiver.tidymodels.org/articles/model-card.html>
+
+Deploy model as a REST API:
+
+```{r}
+library(plumber)
+pr() %>%
+    vetiver_api(v, debug = TRUE) %>%
+    pr_run()
+```
+
+
+```{r}
+vetiver_deploy_rsconnect(
+    model_board,
+    "gt/superbowl_rf",
+    predict_args = list(debug = TRUE),
+    account = "gt"
+)
+
+```
+
+
+
+```{r}
+new_ads <- superbowl_ads %>% select(-like_count) %>% slice_sample(n = 3)
+new_ads
+
+
+```
+
+
+Predict for remote vetiver model:
+
+```{r}
+## source train-rf.R
+vet_api_key <- Sys.getenv("VETIVER_API")
+superbowl_endpoint <-  vetiver_endpoint(Sys.getenv("phil_endpoint_super"))
+
+# superbowl_endpoint <- vetiver_endpoint("http://ec2-18-216-69-78.us-east-2.compute.amazonaws.com/rsconnect/predict2/")
+superbowl_endpoint
+```
+
+```{r}
+# predict(superbowl_endpoint, new_ads)
+
+predict(superbowl_endpoint, new_ads, httr::add_headers(Authorization = paste("Key", vet_api_key)))
+```
+
+## Example APIs to explore:
+
+-   Predict whether content on Netflix is a TV show or movie (unstructured text data): <https://colorado.rstudio.com/rsc/netflix-descriptions/>
+
+-   Predict ridership at Chicago Clark & Lake "L" station (complex time series, robust checking of new data): <https://colorado.rstudio.com/rsc/chicago-ridership-api/>
+
+## What's next for vetiver?
+
+Monitoring, easier deployment to cloud platforms

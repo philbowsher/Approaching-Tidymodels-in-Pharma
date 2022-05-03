@@ -34,6 +34,7 @@ c(max(alz_train$VEGF), min(alz_test$VEGF))
 #Recipe -  a recipe for a simple logistic regression model
 # variable on the left-hand side of the tilde (~) is considered the model outcome
 #  right-hand side of the tilde are the predictors
+# predict class based on alz data
 ad_rec <- recipe(Class ~ tau + VEGF, data = alz_train)
 
 # parsnip package
@@ -57,6 +58,8 @@ tree_mod
 ```
 ```{r}
 # workflows - workflow is an object that can bundle together your pre-processing, modeling, and post-processing requests, recipe and parsnip model, these can be combined into a workflow
+#reuse sets of steps, rather than
+# add recipe and then model, and package up steps from above
 
 lr_wflow <- workflow() %>% 
   add_recipe(ad_rec) %>% 
@@ -86,12 +89,12 @@ tree_pred <- tree_wflow %>%
   mutate(true_class = alz_test$Class) %>% 
   accuracy(truth = true_class, 
            estimate = .pred_class)
-```
 
-```{r}
+# Predictions
 lr_pred
 tree_pred
 ```
+
 
 
 
