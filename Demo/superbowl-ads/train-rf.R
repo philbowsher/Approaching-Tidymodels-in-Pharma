@@ -1,3 +1,6 @@
+# This is a local example, we will deploy fully in RMD file
+# This will show you how to use API locally but not online
+
 library(tidyverse)
 superbowl_ads_raw <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-03-02/youtube.csv')
 

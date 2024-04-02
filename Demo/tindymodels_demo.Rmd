@@ -13,7 +13,7 @@ library(tidymodels)
 
 data("ad_data")
 alz <- ad_data
-print("Hello Phuse 2022!")
+print("Hello Workshop Attendees!")
 ```
 
 

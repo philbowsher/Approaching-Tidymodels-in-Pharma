@@ -1,3 +1,5 @@
+# This is a R file, we will use a RMD/QMD in the next example.
+
 library(tidymodels)
 data(Sacramento)
 
@@ -11,23 +13,32 @@ rf_fit <-
 
 rf_fit
 
+# Save out model and get it ready to host online
+
 library(vetiver)
 v <- vetiver_model(rf_fit, "sacramento_rf_phil")
 v
 
+# https://colorado.posit.co/rsc/ShinyDeployWorkshop/ShinyRSCWorkshop.html#13
+# This will explain how to setup the Environment Vars "envvar"
+# Please see Renviron_example.txt
+
 #step2
 library(pins)
-model_board <- board_rsconnect(
+model_board <- board_connect(
     auth = "envvar",
     server = Sys.getenv("CONNECT_SERVER"), # Sys.getenv("CONNECT_SERVER")
-    account = "gt",
+    account = "tidymodels",
     key = Sys.getenv("VETIVER_API"))
 model_board %>% vetiver_pin_write(v)
 
 #plumber deploy
 vetiver_deploy_rsconnect(
     model_board,
-    "gt/sacramento_rf_phil",
+    "sacramento_rf_phil",
     predict_args = list(debug = TRUE),
-    account = "gt"
+    account = "tidymodels"
 )
+
+
+# After we deploy, we can test API in Connect, make sure to set string as "Residential"

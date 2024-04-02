@@ -82,10 +82,10 @@ Version and share the model:
 library(pins)
 
 
-model_board <- board_rsconnect(
+model_board <- board_connect(
     auth = "envvar",
     server = Sys.getenv("CONNECT_SERVER"), # Sys.getenv("CONNECT_SERVER")
-    account = "gt",
+    account = "tidymodels",
     key = Sys.getenv("VETIVER_API"))
 
 model_board %>% vetiver_pin_write(v)
@@ -109,9 +109,9 @@ pr() %>%
 ```{r}
 vetiver_deploy_rsconnect(
     model_board,
-    "gt/superbowl_rf",
+    "superbowl_rf",
     predict_args = list(debug = TRUE),
-    account = "gt"
+    account = "tidymodels"
 )
 
 ```

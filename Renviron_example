@@ -1,0 +1,5 @@
+CONNECT_API_KEY="KEY FROM CONNECT"
+CONNECT_SERVER="httpsYOURSERVER/rsconnect/"
+phil_endpoint_sac="YOURSERVER/rsconnect/sacramento_rf_phil/predict"
+VETIVER_API="KEY FROM CONNECT"
+phil_endpoint_super="YOURSERVER/rsconnect/superbowl_rf/predict"
