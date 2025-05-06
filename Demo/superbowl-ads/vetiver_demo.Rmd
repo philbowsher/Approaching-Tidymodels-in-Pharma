@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## The MLOps cycle
+## Run this all in 1 file, other R file is just training and API
 
 ![MLOps cycle](Vetiver_cycle_slide3.png)
 
@@ -134,6 +135,7 @@ vet_api_key <- Sys.getenv("VETIVER_API")
 superbowl_endpoint <-  vetiver_endpoint(Sys.getenv("phil_endpoint_super"))
 
 # superbowl_endpoint <- vetiver_endpoint("http://ec2-18-216-69-78.us-east-2.compute.amazonaws.com/rsconnect/predict2/")
+# this name is confusing, predict is the endpoint not predict2, and connect name would be before it 5/6/25
 superbowl_endpoint
 ```
 
