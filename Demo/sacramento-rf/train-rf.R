@@ -14,7 +14,7 @@ rf_fit <-
 rf_fit
 
 # Save out model and get it ready to host online
-
+# Vetiver model sacramento_rf_phil, is the name of the model to be pinned in Connect
 library(vetiver)
 v <- vetiver_model(rf_fit, "sacramento_rf_phil")
 v
@@ -22,6 +22,7 @@ v
 # https://colorado.posit.co/rsc/ShinyDeployWorkshop/ShinyRSCWorkshop.html#13
 # This will explain how to setup the Environment Vars "envvar"
 # Please see Renviron_example.txt
+# usethis::edit_r_environ()
 
 #step2
 library(pins)
