@@ -2,7 +2,7 @@
 title: "tidymodel_demo"
 output: html_document
 ---
-
+Slides are here: https://tmv.netlify.app/site/slides/rmed01-model.html#1
 
 Get Data
 ```{r setup, include=FALSE}
@@ -10,12 +10,22 @@ options(scipen = 999)
 library(tidyverse)
 library(modeldata)
 library(tidymodels)
+#need to add C50 as of 5/6/2025
+library(C50)
 
 data("ad_data")
 alz <- ad_data
 print("Hello Workshop Attendees!")
 ```
+# use ggplot2 builder to make sometime like:
 
+```{r}
+ggplot(ad_data) +
+  aes(x = tau, y = VEGF, colour = Class) +
+  geom_point() +
+  scale_color_hue(direction = 1) +
+  theme_minimal()
+```
 
 ```{r}
 
