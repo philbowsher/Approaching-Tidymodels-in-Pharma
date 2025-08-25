@@ -27,6 +27,7 @@ vet_api_key <- Sys.getenv("VETIVER_API")
 # vetiver_endpoint("http://ec2-18-216-69-78.us-east-2.compute.amazonaws.com/rsconnect/sacremento_rf_phil/predict")
 # we are pulling from the Renviron
 # Make sure to set phil_endpoint_sac in your .Renviron file
+#I left this as Phil but you could change it to your first name if you like
 phil_endpoint <-  vetiver_endpoint(Sys.getenv("phil_endpoint_sac"))
   
 
