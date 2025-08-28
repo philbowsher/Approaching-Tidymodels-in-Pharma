@@ -18,6 +18,8 @@ Data in the modeldata package
 
 https://posit-conf-2024.github.io/vetiver/
 
+https://posit-conf-2024.github.io/vetiver/slides/02-deploy.html#/title-slide
+
 https://github.com/posit-conf-2024/vetiver
 
 https://github.com/posit-conf-2024/vetiver/blob/7a6c45838fb8834c3aeb8fb8f63e1fcffcec720d/class-work/01-intro-rstats.qmd#L80
